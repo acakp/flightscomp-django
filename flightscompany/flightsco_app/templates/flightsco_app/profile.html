@@ -1,0 +1,154 @@
+{% extends "flightsco_app/base.html" %}
+{% load static %}
+
+{% block title %}Личный кабинет - Дешёвые авиабилеты{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'flightsco_app/css/profile.css' %}" />
+{% endblock %}
+
+{% block content %}
+<main class="profile-section">
+  <div class="container">
+    <div class="row">
+      <!-- боковая панель -->
+      <div class="col-12 col-md-4 col-lg-3 mb-4">
+        <div class="card feature-card p-3">
+          <div class="text-center mb-4">
+            <div class="profile-avatar mx-auto mb-3">
+              ИП
+            </div>
+            <h5 class="mb-1">Иван Петров</h5>
+            <p class="text-muted small">ivan.petrov@email.com</p>
+          </div>
+
+          <nav class="profile-nav">
+            <a href="#" class="profile-nav-item active">Мои бронирования</a>
+            <a href="#" class="profile-nav-item">Личные данные</a>
+            <a href="#" class="profile-nav-item">Настройки</a>
+            <a href="#" class="profile-nav-item">История платежей</a>
+            <a href="{% url 'auth' %}" class="profile-nav-item text-danger">Выйти</a>
+          </nav>
+        </div>
+      </div>
+
+      <!-- основной контент -->
+      <div class="col-12 col-md-8 col-lg-9">
+        <div class="card feature-card p-4">
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="mb-0">Мои бронирования</h2>
+            <button class="btn btn-primary">Новое бронирование</button>
+          </div>
+
+          <!-- статистика -->
+          <div class="row g-3 mb-5">
+            <div class="col-12 col-sm-4">
+              <div class="stat-card text-center p-3">
+                <strong class="h4">3</strong>
+                <p class="mb-0 small">Активных бронирований</p>
+              </div>
+            </div>
+            <div class="col-12 col-sm-4">
+              <div class="stat-card text-center p-3">
+                <strong class="h4">12</strong>
+                <p class="mb-0 small">Всего поездок</p>
+              </div>
+            </div>
+            <div class="col-12 col-sm-4">
+              <div class="stat-card text-center p-3">
+                <strong class="h4">2</strong>
+                <p class="mb-0 small">Предстоящих рейса</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- ближайшие поездки -->
+          <h4 class="mb-3">Ближайшие поездки</h4>
+          <div class="booking-list">
+            <!-- бронирование 1 -->
+            <div class="booking-card p-3 mb-3">
+              <div class="row align-items-center">
+                <div class="col-12 col-md-6">
+                  <div class="d-flex align-items-center">
+                    <div class="flight-icon me-3">
+                      ✈️
+                    </div>
+                    <div>
+                      <strong>Москва → Стамбул</strong>
+                      <div class="small text-muted">15 мая 2024 • Рейс SU-2134</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12 col-md-3">
+                  <div class="text-md-center">
+                    <div class="small text-muted">Статус</div>
+                    <span class="badge bg-success">Подтверждено</span>
+                  </div>
+                </div>
+                <div class="col-12 col-md-3 text-md-end">
+                  <button class="btn btn-outline-primary btn-sm mt-2 mt-md-0">Детали</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- бронирование 2 -->
+            <div class="booking-card p-3 mb-3">
+              <div class="row align-items-center">
+                <div class="col-12 col-md-6">
+                  <div class="d-flex align-items-center">
+                    <div class="flight-icon me-3">
+                      ✈️
+                    </div>
+                    <div>
+                      <strong>Стамбул → Москва</strong>
+                      <div class="small text-muted">22 мая 2024 • Рейс SU-2135</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12 col-md-3">
+                  <div class="text-md-center">
+                    <div class="small text-muted">Статус</div>
+                    <span class="badge bg-success">Подтверждено</span>
+                  </div>
+                </div>
+                <div class="col-12 col-md-3 text-md-end">
+                  <button class="btn btn-outline-primary btn-sm mt-2 mt-md-0">Детали</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- история поездок -->
+          <h4 class="mb-3 mt-5">История поездок</h4>
+          <div class="booking-list">
+            <div class="booking-card p-3 mb-3 completed">
+              <div class="row align-items-center">
+                <div class="col-12 col-md-6">
+                  <div class="d-flex align-items-center">
+                    <div class="flight-icon me-3 completed">
+                      ✈️
+                    </div>
+                    <div>
+                      <strong>Москва → Сочи</strong>
+                      <div class="small text-muted">10 марта 2024 • Рейс SU-1234</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12 col-md-3">
+                  <div class="text-md-center">
+                    <div class="small text-muted">Статус</div>
+                    <span class="badge bg-secondary">Завершено</span>
+                  </div>
+                </div>
+                <div class="col-12 col-md-3 text-md-end">
+                  <button class="btn btn-outline-secondary btn-sm mt-2 mt-md-0">Детали</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+{% endblock %}

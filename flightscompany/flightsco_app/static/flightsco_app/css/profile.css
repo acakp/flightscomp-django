@@ -1,0 +1,100 @@
+.profile-section {
+  padding: 120px 20px 80px;
+  background: #f8f8f8;
+  min-height: 100vh;
+}
+
+.profile-avatar {
+  width: 80px;
+  height: 80px;
+  background: #0071e3;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.profile-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.profile-nav-item {
+  padding: 12px 16px;
+  text-decoration: none;
+  color: #222;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+.profile-nav-item:hover {
+  background: #e7f1ff;
+  color: #0071e3;
+}
+
+.profile-nav-item.active {
+  background: #0071e3;
+  color: white;
+}
+
+.profile-nav-item.text-danger:hover {
+  background: #ffe7e7;
+  color: #dc3545;
+}
+
+.stat-card {
+  background: #e7f1ff;
+  border-radius: 12px;
+}
+
+.booking-card {
+  border: 1px solid #e1e8ed;
+  border-radius: 12px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.booking-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.booking-card.completed {
+  opacity: 0.7;
+}
+
+.flight-icon {
+  width: 40px;
+  height: 40px;
+  background: #0071e3;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 18px;
+}
+
+.flight-icon.completed {
+  background: #6c757d;
+}
+
+/* адаптивность */
+@media (max-width: 768px) {
+  .profile-section {
+    padding: 100px 15px 60px;
+  }
+
+  .profile-avatar {
+    width: 60px;
+    height: 60px;
+    font-size: 20px;
+  }
+
+  .booking-card {
+    margin-bottom: 15px;
+  }
+}

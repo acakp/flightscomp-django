@@ -1,0 +1,244 @@
+{% extends "flightsco_app/base.html" %}
+{% load static %}
+
+{% block title %}Дешёвые авиабилеты - Флайтс Компани{% endblock %}
+
+{% block content %}
+<header class="hero">
+  <div class="overlay"></div>
+  <div class="content">
+    <h1 class="mb-4">Действительно дешевые авиабилеты</h1>
+    <div class="search-box container">
+      <div class="row g-2 justify-content-center">
+        <div class="col-12 col-md-3">
+          <input type="text" class="form-control p-3" placeholder="Откуда" />
+        </div>
+        <div class="col-12 col-md-3">
+          <input type="text" class="form-control p-3" placeholder="Куда" />
+        </div>
+        <div class="col-12 col-md-3">
+          <input type="date" class="form-control p-3" />
+        </div>
+        <div class="col-12 col-md-9">
+          <button class="btn btn-primary w-100 p-3">Найти билеты</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="features container py-5">
+  <div class="row g-4">
+    <div class="col-12 col-md-4">
+      <div class="card feature-card text-center">
+        <div class="card-body">
+          <h4>Надёжно</h4>
+          <p class="mb-0">Мы работаем только с проверенными партнёрами.</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-md-4">
+      <div class="card feature-card text-center">
+        <div class="card-body">
+          <h4>Безопасно</h4>
+          <p class="mb-0">Надёжная защита данных.</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-md-4">
+      <div class="card feature-card text-center">
+        <div class="card-body">
+          <h4>Удобно</h4>
+          <p class="mb-0">Поддержка 24/7.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="stats">
+  <div class="stat">
+    <strong>19 000+</strong>
+    <span>Вариантов</span>
+  </div>
+  <div class="stat">
+    <strong>780</strong>
+    <span>Авиакомпаний</span>
+  </div>
+  <div class="stat">
+    <strong>99%</strong>
+    <span>Довольных клиентов</span>
+  </div>
+</section>
+
+<section class="about">
+  <div class="container">
+    <h2>Мы меняем правила игры в бронировании путешествий</h2>
+    <div class="about-block">
+      <div class="about-text">
+        <h3>Почему мы?</h3>
+        <p>Cервис, в котором технологии служат людям: меньше рутинных действий, больше уверенности и вдохновения для
+          путешествий. Присоединяйтесь — и позвольте нам перевернуть ваше представление о покупке билетов онлайн.</p>
+        <p>Наша миссия — сделать покупку авиабилетов и бронирование отелей максимально простым, прозрачным и приятным.
+          Мы объединили лучшие технологии поиска, гибкие варианты тарифов и продуманный клиентский сервис, чтобы
+          каждый этап подготовки к поездке стал быстрым и уверенным. Забудьте о часах сравнения цен, скрытых комиссиях
+          и непонятных условиях — у нас всё честно, понятно и нацелено на вашу выгоду.</p>
+      </div>
+      <img class="about-img" src="{% static 'flightsco_app/images/ai_pigeon.png' %}" alt="Путешествия">
+    </div>
+  </div>
+</section>
+
+<section class="reviews">
+  <div class="container">
+    <h2 class="text-center mb-5">О нас говорят</h2>
+    <div class="review-grid">
+
+      <div class="review">
+        <div class="review-header">
+          <div class="review-avatar">АК</div>
+          <div class="review-user">
+            <div class="review-name">Анна К.</div>
+            <div class="review-handle">@anna_traveler</div>
+          </div>
+        </div>
+        <div class="review-content">Отличный сервис! Всё быстро и удобно. Билеты нашла за 5 минут! 🎉</div>
+      </div>
+      <div class="review">
+        <div class="review-header">
+          <div class="review-avatar">
+            <img src="{% static 'flightsco_app/images/ava1.png' %}" alt="an" />
+          </div>
+          <div class="review-user">
+            <div class="review-name">Михаил П.</div>
+            <div class="review-handle">@misha_fly</div>
+          </div>
+        </div>
+        <div class="review-content">Купил билет за 5 минут. Рекомендую! Цены действительно ниже, чем везде. ✈️</div>
+      </div>
+      <div class="review">
+        <div class="review-header">
+          <div class="review-avatar">ЕС</div>
+          <div class="review-user">
+            <div class="review-name">Елена С.</div>
+            <div class="review-handle">@elena_sky</div>
+          </div>
+        </div>
+        <div class="review-content">Поддержка помогла решить вопрос с возвратом билета. Очень вежливые операторы! 👍
+        </div>
+      </div>
+      <div class="review">
+        <div class="review-header">
+          <div class="review-avatar">
+            <img src="{% static 'flightsco_app/images/ava2.png' %}" alt="an" />
+          </div>
+          <div class="review-user">
+            <div class="review-name">наташа</div>
+            <div class="review-handle">@angelochek</div>
+          </div>
+        </div>
+        <div class="review-content">Отмена рейса? Поддержка @FlightsCompany всё решила быстро и без лишней
+          нервотрёпки. Респект. 🙏</div>
+      </div>
+      <div class="review">
+        <div class="review-header">
+          <div class="review-avatar">дв</div>
+          <div class="review-user">
+            <div class="review-name">дмитрий в.</div>
+            <div class="review-handle">@dima_trips</div>
+          </div>
+        </div>
+        <div class="review-content">Покупка билета с возвратом прошла без проблем. Гибкие опции - спасение для
+          путешественников</div>
+      </div>
+      <div class="review">
+        <div class="review-header">
+          <div class="review-avatar">чп</div>
+          <div class="review-user">
+            <div class="review-name">человек пользователь</div>
+            <div class="review-handle">@coolkid68</div>
+          </div>
+        </div>
+        <div class="review-content">как вообще @FlightsCompany находит НАСТОЛЬКО дешевые билеты? Похоже на магию</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="purchase-steps">
+  <div class="container">
+    <h2 class="text-center mb-5">Как происходит покупка билета</h2>
+    <div class="steps-container">
+      <div class="steps-wrapper">
+        <div class="step">
+          <div class="step-number">1. Поиск</div>
+          <p>Выбираете направление и дату — сервис покажет лучшие варианты от 780 авиакомпаний.</p>
+        </div>
+        <div class="step">
+          <div class="step-number">2. Выбор</div>
+          <p>Сравнивайте цены, время вылета и авиакомпании. Фильтруйте по удобным параметрам.</p>
+        </div>
+        <div class="step">
+          <div class="step-number">3. Бронирование</div>
+          <p>Вводите данные пассажиров и выбирайте способ оплаты. Поддержка 24/7 поможет с любыми вопросами.</p>
+        </div>
+        <div class="step">
+          <div class="step-number">4. Получение</div>
+          <p>Мгновенное получение билетов на email. Всё готово к путешествию!</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="hero">
+  <div class="overlay"></div>
+  <div class="content">
+    <h1 class="mb-4">Пора отправляться в путешествие!</h1>
+    <div class="search-box container">
+      <div class="row g-2 justify-content-center">
+        <div class="col-12 col-md-3">
+          <input type="text" class="form-control p-3" placeholder="Откуда" />
+        </div>
+        <div class="col-12 col-md-3">
+          <input type="text" class="form-control p-3" placeholder="Куда" />
+        </div>
+        <div class="col-12 col-md-3">
+          <input type="date" class="form-control p-3" />
+        </div>
+        <div class="col-12 col-md-9">
+          <button class="btn btn-primary w-100 p-3">Найти билеты</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="subscribe container">
+  <div class="telegram-card text-center">
+    <h2>Не упустите самые выгодные предложения</h2>
+    <p>Подпишитесь на наш Telegram-канал и получайте акции первыми</p>
+    <button class="btn btn-light btn-lg px-5 py-3">Подписаться на Telegram</button>
+  </div>
+</section>
+
+<section class="faq">
+  <h2 class="text-center mb-5">Вопросы и ответы</h2>
+  <details>
+    <summary>Как купить билет дешевле?</summary>
+    <p>Следите за акциями и бронируйте заранее. Мы рекомендуем покупать билеты за 2-3 месяца до поездки.</p>
+  </details>
+  <details>
+    <summary>Какие способы оплаты доступны?</summary>
+    <p>Поддерживаем банковские карты, электронные кошельки, интернет-банкинг и криптовалюты.</p>
+  </details>
+  <details>
+    <summary>Можно ли вернуть билет?</summary>
+    <p>Возврат зависит от тарифа авиакомпании. Мы поможем оформить возврат в соответствии с правилами перевозчика.</p>
+  </details>
+  <details>
+    <summary>Как работает поиск дешёвых рейсов?</summary>
+    <p>Мы сравниваем цены у десятков авиакомпаний и систем бронирования в реальном времени.</p>
+  </details>
+</section>
+{% endblock %}
