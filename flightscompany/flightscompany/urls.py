@@ -19,6 +19,10 @@ from django.contrib import admin
 from django.urls import path, include
 from flightsco_app import views
 
+# Обработчики ошибок
+handler404 = 'flightsco_app.views.page_not_found'
+handler500 = 'flightsco_app.views.server_error'
+
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include("flightsco_app.urls")),

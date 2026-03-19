@@ -1,0 +1,18 @@
+{% block title %}Ошибка сервера - Флайтс Компани{% endblock %}
+
+{% block content %}
+<main class="error-section" style="padding: 120px 20px 80px; background: #f8f8f8; min-height: 100vh;">
+  <div class="container">
+    <h1>500</h1>
+    <h2>Ошибка сервера </h2>
+    <p>
+      Произошла ошибка при обработке вашего запроса.
+      Пожалуйста, попробуйте позже или свяжитесь с нашей службой поддержки.
+    </p>
+    <div class="d-grid gap-2">
+      <a href="{% url 'index' %}">Вернуться на главную</a>
+      <a href="{% url 'search' %}">Поиск рейсов</a>
+    </div>
+  </div>
+</main>
+{% endblock %}
