@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.http import (
     HttpResponse,
     HttpResponseNotFound,
@@ -7,10 +7,28 @@ from django.http import (
 )
 from django.urls import reverse
 
+from .models import FlightArticle
+
 
 # Create your views here.
 def index(request):
-    return render(request, "flightsco_app/index.html")
+    articles = FlightArticle.published.all()
+    context = {
+        "articles": articles,
+    }
+    return render(request, "flightsco_app/index.html", context)
+
+
+def article_detail(request, article_slug):
+    article = get_object_or_404(
+        FlightArticle,
+        slug=article_slug,
+        status=FlightArticle.Status.PUBLISHED,
+    )
+    context = {
+        "article": article,
+    }
+    return render(request, "flightsco_app/article_detail.html", context)
 
 
 def auth(request):

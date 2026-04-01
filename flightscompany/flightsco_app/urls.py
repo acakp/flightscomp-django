@@ -1,9 +1,12 @@
 from django.urls import path
+
 from . import views
 
 urlpatterns = [
     # главная страница
     path("", views.index, name="index"),
+    # детальная страница предложения по слагу
+    path("offers/<slug:article_slug>/", views.article_detail, name="article_detail"),
     # авторизация и профиль
     path("auth/", views.auth, name="auth"),
     path("profile/", views.profile, name="profile"),
