@@ -1,10 +1,5 @@
 from django.shortcuts import get_object_or_404, render, redirect
-from django.http import (
-    HttpResponse,
-    HttpResponseNotFound,
-    HttpResponsePermanentRedirect,
-    Http404,
-)
+from django.http import HttpResponse, HttpResponsePermanentRedirect, Http404
 from django.urls import reverse
 
 from .models import FlightArticle
@@ -125,17 +120,8 @@ def redirect_with_reverse(request):
 
 
 def page_not_found(request, exception):
-    return HttpResponseNotFound(
-        "<h1>Страница не найдена</h1>"
-        "<p>Запрошенная страница не существует или была удалена.</p>"
-        "<p><a href='/'>Вернуться на главную</a></p>"
-    )
+    return render(request, "flightsco_app/404.html", status=404)
 
 
 def server_error(request):
-    return HttpResponse(
-        "<h1>Ошибка сервера (500)</h1>"
-        "<p>Произошла ошибка при обработке запроса.</p>"
-        "<p><a href='/'>Вернуться на главную</a></p>",
-        status=500,
-    )
+    return render(request, "flightsco_app/500.html", status=500)
