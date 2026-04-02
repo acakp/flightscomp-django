@@ -1,24 +1,51 @@
-from django.shortcuts import get_object_or_404, render, redirect
-from django.http import HttpResponse, HttpResponsePermanentRedirect, Http404
+from django.http import Http404, HttpResponse, HttpResponsePermanentRedirect
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 
-from .models import FlightArticle
+from .models import FlightArticle, FlightCategory, FlightTag
+
+
+def _get_offer_queryset():
+    return FlightArticle.published.select_related("category").prefetch_related("tags")
+
+
+def _build_catalog_context(
+    *,
+    articles,
+    page_heading,
+    page_description,
+    page_title=None,
+    selected_category=None,
+    selected_tag=None,
+):
+    return {
+        "articles": articles,
+        "categories": FlightCategory.objects.all(),
+        "all_tags": FlightTag.objects.all(),
+        "page_heading": page_heading,
+        "page_description": page_description,
+        "page_title": page_title or f"{page_heading} - Флайтс Компани",
+        "selected_category": selected_category,
+        "selected_tag": selected_tag,
+    }
 
 
 # Create your views here.
 def index(request):
-    articles = FlightArticle.published.all()
-    context = {
-        "articles": articles,
-    }
+    articles = _get_offer_queryset()
+    context = _build_catalog_context(
+        articles=articles,
+        page_heading="Актуальные предложения",
+        page_description="Подборка предложений из базы данных с фильтрацией по категориям и тегам.",
+        page_title="Дешёвые авиабилеты - Флайтс Компани",
+    )
     return render(request, "flightsco_app/index.html", context)
 
 
 def article_detail(request, article_slug):
     article = get_object_or_404(
-        FlightArticle,
+        _get_offer_queryset(),
         slug=article_slug,
-        status=FlightArticle.Status.PUBLISHED,
     )
     context = {
         "article": article,
@@ -43,14 +70,29 @@ def profile(request):
 
 
 def planes(request, plane_id):
-    return HttpResponse(f"<h1>Самолет #{plane_id}</h1><p>Информация о самолете</p>")
+    return HttpResponse("<h1>Самолет #{plane_id}</h1><p>Информация о самолете</p>")
 
 
 def categories(request):
-    if request.GET:
-        category_type = request.GET.get("type", "all")
-        print(f"Категория: {category_type}")
-    return HttpResponse("<h1>Категории рейсов</h1><p>Список категорий</p>")
+    context = _build_catalog_context(
+        articles=_get_offer_queryset(),
+        page_heading="Каталог по категориям",
+        page_description="Все опубликованные предложения с возможностью перейти в нужную рубрику.",
+        page_title="Категории перелетов - Флайтс Компани",
+    )
+    return render(request, "flightsco_app/index.html", context)
+
+
+def category_detail(request, category_slug):
+    category = get_object_or_404(FlightCategory, slug=category_slug)
+    articles = _get_offer_queryset().filter(category=category)
+    context = _build_catalog_context(
+        articles=articles,
+        page_heading=f"Категория: {category.name}",
+        page_description="Предложения, связанные с выбранной рубрикой.",
+        selected_category=category,
+    )
+    return render(request, "flightsco_app/index.html", context)
 
 
 def flight_detail(request, flight_id):
@@ -80,6 +122,18 @@ def search(request):
             )
 
     return render(request, "flightsco_app/search.html")
+
+
+def tag_detail(request, tag_slug):
+    tag = get_object_or_404(FlightTag, slug=tag_slug)
+    articles = _get_offer_queryset().filter(tags=tag).distinct()
+    context = _build_catalog_context(
+        articles=articles,
+        page_heading=f"Тег: {tag.name}",
+        page_description="Предложения, отмеченные выбранным тегом.",
+        selected_tag=tag,
+    )
+    return render(request, "flightsco_app/index.html", context)
 
 
 def booking(request):

@@ -1,0 +1,7 @@
+{
+  "typeCheckingMode": "basic",
+  "reportIncompatibleMethodOverride": "none",
+  "reportAssignmentType": "none",
+  "reportMissingTypeStubs": "none",
+  "reportArgumentType": "none",
+}
