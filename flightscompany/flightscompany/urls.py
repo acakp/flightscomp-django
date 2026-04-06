@@ -16,12 +16,16 @@ Including another URLconf
 """
 
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import include, path
 from flightsco_app import views
 
+admin.site.site_header = "админ панель"
+admin.site.site_title = "Flights Company Admin"
+admin.site.index_title = "Управление каталогом авиапредложений"
+
 # Обработчики ошибок
-handler404 = 'flightsco_app.views.page_not_found'
-handler500 = 'flightsco_app.views.server_error'
+handler404 = "flightsco_app.views.page_not_found"
+handler500 = "flightsco_app.views.server_error"
 
 urlpatterns = [
     path("admin/", admin.site.urls),

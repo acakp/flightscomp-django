@@ -1,0 +1,55 @@
+:root {
+  --fc-admin-dark: #091727;
+  --fc-admin-primary: #0d5ea6;
+  --fc-admin-primary-soft: #1e7bc8;
+  --fc-admin-surface: #eef5fb;
+}
+
+#header {
+  background: linear-gradient(120deg, var(--fc-admin-dark), #123d68);
+  color: #fff;
+}
+
+#site-name a,
+#user-tools,
+#user-tools a,
+#user-tools button {
+  color: #fff;
+}
+
+div.breadcrumbs {
+  background: linear-gradient(120deg, #11406b, var(--fc-admin-primary));
+}
+
+.module h2,
+.module caption,
+.inline-group h2 {
+  background: linear-gradient(120deg, #123d68, var(--fc-admin-primary));
+}
+
+.button,
+input[type="submit"],
+input[type="button"],
+.submit-row input,
+a.button {
+  background: var(--fc-admin-primary);
+}
+
+.button.default,
+input[type="submit"].default,
+.submit-row input.default {
+  background: var(--fc-admin-primary-soft);
+}
+
+#nav-sidebar .current-model,
+#nav-sidebar .current-app .section {
+  background: var(--fc-admin-surface);
+}
+
+.messagelist .success {
+  background: #eaf6ed;
+}
+
+.messagelist .warning {
+  background: #fff4dd;
+}

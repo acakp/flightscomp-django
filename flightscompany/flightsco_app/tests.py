@@ -1,4 +1,7 @@
+from django.contrib import admin
+from django.contrib.auth import get_user_model
 from django.db.models.deletion import ProtectedError
+from django.templatetags.static import static
 from django.test import TestCase
 from django.urls import reverse
 
@@ -107,3 +110,146 @@ class FlightRelationsTests(TestCase):
         self.assertContains(response, self.domestic_category.name)
         self.assertContains(response, self.family_tag.name)
         self.assertContains(response, self.weekend_tag.name)
+
+
+class FlightAdminTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        user_model = get_user_model()
+        cls.superuser = user_model.objects.create_superuser(
+            username="admin",
+            email="admin@example.com",
+            password="StrongPass123!",
+        )
+
+        cls.domestic_category = FlightCategory.objects.create(
+            name="Внутренние тестовые рейсы",
+            slug="admin-domestic-category",
+        )
+        cls.international_category = FlightCategory.objects.create(
+            name="Международные тестовые рейсы",
+            slug="admin-international-category",
+        )
+        cls.tag = FlightTag.objects.create(
+            name="Горящий тариф",
+            slug="admin-hot-tag",
+        )
+
+        cls.tagged_article = FlightArticle.objects.create(
+            title="Рейс с тегами",
+            slug="admin-tagged-flight",
+            content="Подробное описание предложения с тегами.",
+            route="Казань — Санкт-Петербург",
+            price="15490.00",
+            category=cls.domestic_category,
+            status=FlightArticle.Status.PUBLISHED,
+        )
+        cls.tagged_article.tags.add(cls.tag)
+
+        cls.untagged_article = FlightArticle.objects.create(
+            title="Рейс без тегов",
+            slug="admin-untagged-flight",
+            content="Материал для проверки пользовательского фильтра.",
+            route="Казань — Самара",
+            price="7490.00",
+            category=cls.domestic_category,
+            status=FlightArticle.Status.DRAFT,
+        )
+
+        cls.international_article = FlightArticle.objects.create(
+            title="Тестовый международный маршрут",
+            slug="admin-international-flight",
+            content="Материал для проверки поиска по названию категории.",
+            route="Казань — Стамбул",
+            price="22490.00",
+            category=cls.international_category,
+            status=FlightArticle.Status.PUBLISHED,
+        )
+
+    def setUp(self):
+        self.client.force_login(self.superuser)
+
+    def test_admin_index_uses_custom_branding_and_styles(self):
+        response = self.client.get(reverse("admin:index"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Панель администрирования Flights Company")
+        self.assertContains(response, "Управление каталогом авиапредложений")
+        self.assertContains(response, static("flightsco_app/css/admin.css"))
+
+    def test_models_are_registered_with_expected_admin_settings(self):
+        article_admin = admin.site._registry[FlightArticle]
+        category_admin = admin.site._registry[FlightCategory]
+        tag_admin = admin.site._registry[FlightTag]
+
+        self.assertEqual(
+            article_admin.list_display,
+            (
+                "title",
+                "route",
+                "price",
+                "time_create",
+                "status",
+                "category",
+                "brief_info",
+            ),
+        )
+        self.assertEqual(article_admin.list_editable, ("status", "category"))
+        self.assertEqual(article_admin.prepopulated_fields, {"slug": ("title",)})
+        self.assertEqual(article_admin.filter_horizontal, ("tags",))
+        self.assertEqual(category_admin.prepopulated_fields, {"slug": ("name",)})
+        self.assertEqual(tag_admin.prepopulated_fields, {"slug": ("name",)})
+
+    def test_admin_search_finds_articles_by_related_category_name(self):
+        response = self.client.get(
+            reverse("admin:flightsco_app_flightarticle_changelist"),
+            {"q": "Международные"},
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, self.international_article.title)
+        self.assertNotContains(response, self.tagged_article.title)
+
+    def test_admin_custom_filter_shows_only_articles_without_tags(self):
+        response = self.client.get(
+            reverse("admin:flightsco_app_flightarticle_changelist"),
+            {"tag_state": "without_tags"},
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, self.untagged_article.title)
+        self.assertNotContains(response, self.tagged_article.title)
+
+    def test_admin_publish_action_updates_status_and_shows_message(self):
+        response = self.client.post(
+            reverse("admin:flightsco_app_flightarticle_changelist"),
+            {
+                "action": "set_published",
+                "_selected_action": [str(self.untagged_article.pk)],
+                "index": 0,
+                "select_across": 0,
+            },
+            follow=True,
+        )
+
+        self.untagged_article.refresh_from_db()
+
+        self.assertEqual(self.untagged_article.status, FlightArticle.Status.PUBLISHED)
+        self.assertContains(response, "Изменено 1 записи(ей).")
+
+    def test_admin_draft_action_updates_status_and_shows_warning_message(self):
+        response = self.client.post(
+            reverse("admin:flightsco_app_flightarticle_changelist"),
+            {
+                "action": "set_draft",
+                "_selected_action": [str(self.tagged_article.pk)],
+                "index": 0,
+                "select_across": 0,
+            },
+            follow=True,
+        )
+
+        self.tagged_article.refresh_from_db()
+
+        self.assertEqual(self.tagged_article.status, FlightArticle.Status.DRAFT)
+        self.assertContains(response, "1 записи(ей) сняты с публикации!")

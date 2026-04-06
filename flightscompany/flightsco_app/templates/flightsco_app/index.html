@@ -74,7 +74,7 @@
                         <div class="tag-cloud">
                             {% for tag in all_tags %}
                                 <a class="tag-chip {% if selected_tag and selected_tag.pk == tag.pk %}is-active{% endif %}"
-                                   href="{{ tag.get_absolute_url }}">#{{ tag.name }}</a>,
+                                   href="{{ tag.get_absolute_url }}">#{{ tag.name }}</a>
                             {% empty %}
                                 <span class="catalog-empty">Теги пока не добавлены.</span>
                             {% endfor %}
