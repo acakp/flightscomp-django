@@ -1,0 +1,53 @@
+{% extends "flightsco_app/base.html" %}
+
+{% block title %}{{ title }} - Флайтс Компани{% endblock %}
+
+{% block content %}
+<main class="form-page">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-12 col-lg-8">
+                <div class="form-card">
+                    <p class="catalog-label mb-2">ЛАБОРАТОРНАЯ РАБОТА 9</p>
+                    <h1 class="mb-3">{{ title }}</h1>
+                    <p class="catalog-description mb-4">
+                        Страница демонстрирует загрузку произвольного файла через форму и сохранение его через модель Django.
+                    </p>
+
+                    <form action="" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="form-error">{{ form.non_field_errors }}</div>
+
+                        {% for f in form %}
+                        <div class="form-row-block">
+                            <label class="form-label" for="{{ f.id_for_label }}">{{ f.label }}</label>
+                            {{ f }}
+                            <div class="form-error">{{ f.errors }}</div>
+                        </div>
+                        {% endfor %}
+
+                        <button type="submit" class="btn btn-primary">Отправить файл</button>
+                    </form>
+
+                    <div class="upload-list mt-4">
+                        <h2 class="h4 mb-3">Последние загрузки</h2>
+                        {% if uploads %}
+                        <ul class="list-unstyled mb-0">
+                            {% for item in uploads %}
+                            <li class="upload-item">
+                                <a href="{{ item.file.url }}" target="_blank" rel="noopener">
+                                    {{ item.file.name }}
+                                </a>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        {% else %}
+                        <p class="mb-0 text-muted">Файлы пока не загружались.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}

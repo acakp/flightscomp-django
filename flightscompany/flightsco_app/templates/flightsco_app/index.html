@@ -88,6 +88,7 @@
                         <h2 class="mb-1">{{ page_heading }}</h2>
                         <p class="catalog-description mb-0">{{ page_description }}</p>
                     </div>
+                    <a href="{% url 'add_offer' %}" class="btn btn-primary">Добавить предложение</a>
                 </div>
                 <div class="row g-4">
                     {% for article in articles %}
@@ -107,6 +108,13 @@
                                         {% endif %}
                                         <span class="offer-meta-item">Обновлено {{ article.time_update|date:"d.m.Y H:i" }}</span>
                                     </div>
+                                    {% if article.photo %}
+                                        <div class="offer-image-wrap">
+                                            <img class="offer-image-thumb"
+                                                 src="{{ article.photo.url }}"
+                                                 alt="{{ article.title }}">
+                                        </div>
+                                    {% endif %}
                                     <h3 class="h4">{{ article.title }}</h3>
                                     <p class="text-muted mb-2">Маршрут: {{ article.route }}</p>
                                     <p class="flex-grow-1">{{ article.content|truncatewords:28 }}</p>

@@ -19,9 +19,9 @@
     <div class="container">
       <div class="navbar-logo"><a href="{% url 'index' %}">флайтс компани</a></div>
       <div class="navbar-links">
-        <button class="navbar-item">Рейсы</button>
-        <button class="navbar-item">Отели</button>
-        <button class="navbar-item">Путешествия</button>
+        <a href="{% url 'search' %}" class="navbar-item">Рейсы</a>
+        <a href="{% url 'add_offer' %}" class="navbar-item">Добавить</a>
+        <a href="{% url 'about' %}" class="navbar-item">Загрузка</a>
       </div>
       <a href="{% url 'profile' %}" class="navbar-item profile-button">Профиль</a>
       <button class="navbar-hamburger" id="hamburger-btn">&#9776;</button>

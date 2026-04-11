@@ -59,6 +59,13 @@ class FlightArticle(models.Model):
     price = models.DecimalField(
         max_digits=10, decimal_places=2, verbose_name="Стоимость"
     )
+    photo = models.ImageField(
+        upload_to="photos/%Y/%m/%d/",
+        blank=True,
+        null=True,
+        default=None,
+        verbose_name="Фото предложения",
+    )
     category = models.ForeignKey(
         FlightCategory,
         on_delete=models.PROTECT,
@@ -96,3 +103,18 @@ class FlightArticle(models.Model):
 
     def get_absolute_url(self):
         return reverse("article_detail", kwargs={"article_slug": self.slug})
+
+
+class UploadedFile(models.Model):
+    file = models.FileField(upload_to="uploads_model/", verbose_name="Файл")
+    time_create = models.DateTimeField(
+        auto_now_add=True, verbose_name="Время загрузки"
+    )
+
+    class Meta:
+        verbose_name = "Загруженный файл"
+        verbose_name_plural = "Загруженные файлы"
+        ordering = ["-time_create"]
+
+    def __str__(self):
+        return self.file.name

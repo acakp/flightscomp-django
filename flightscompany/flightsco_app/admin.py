@@ -1,6 +1,7 @@
 from django.contrib import admin, messages
+from django.utils.safestring import mark_safe
 
-from .models import FlightArticle, FlightCategory, FlightTag
+from .models import FlightArticle, FlightCategory, FlightTag, UploadedFile
 
 
 class TagPresenceFilter(admin.SimpleListFilter):
@@ -25,6 +26,7 @@ class TagPresenceFilter(admin.SimpleListFilter):
 class FlightArticleAdmin(admin.ModelAdmin):
     list_display = (
         "title",
+        "post_photo",
         "route",
         "price",
         "time_create",
@@ -46,20 +48,29 @@ class FlightArticleAdmin(admin.ModelAdmin):
         "content",
         "route",
         "price",
+        "photo",
+        "post_photo",
         "category",
         "tags",
         "status",
         "time_create",
         "time_update",
     )
-    readonly_fields = ("time_create", "time_update")
+    readonly_fields = ("post_photo", "time_create", "time_update")
     prepopulated_fields = {"slug": ("title",)}
     filter_horizontal = ("tags",)
+    save_on_top = True
 
     @admin.display(description="Краткая информация")
     def brief_info(self, article: FlightArticle):
         content_length = len(article.content.strip()) if article.content else 0
         return f"{article.route}, {content_length} символов"
+
+    @admin.display(description="Изображение")
+    def post_photo(self, article: FlightArticle):
+        if article.photo:
+            return mark_safe(f"<img src='{article.photo.url}' width='50'>")
+        return "Без фото"
 
     @admin.action(description="Опубликовать выбранные записи")
     def set_published(self, request, queryset):
@@ -92,3 +103,10 @@ class FlightTagAdmin(admin.ModelAdmin):
     ordering = ("name",)
     search_fields = ("name__startswith",)
     prepopulated_fields = {"slug": ("name",)}
+
+
+@admin.register(UploadedFile)
+class UploadedFileAdmin(admin.ModelAdmin):
+    list_display = ("id", "file", "time_create")
+    list_display_links = ("id", "file")
+    ordering = ("-time_create",)

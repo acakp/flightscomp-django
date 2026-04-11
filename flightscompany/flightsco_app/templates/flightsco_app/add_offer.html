@@ -1,0 +1,36 @@
+{% extends "flightsco_app/base.html" %}
+{% block title %}{{ title }} - Флайтс Компани{% endblock %}
+{% block content %}
+    <main class="form-page">
+        <div class="container py-5">
+            <div class="row justify-content-center">
+                <div class="col-12 col-lg-9">
+                    <div class="form-card">
+                        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+                            <div>
+                                <h1 class="mb-1">{{ title }}</h1>
+                            </div>
+                            <a href="{% url 'index' %}" class="btn btn-outline-primary">Вернуться в каталог</a>
+                        </div>
+                        <form action=""
+                              method="post"
+                              enctype="multipart/form-data"
+                              class="offer-form">
+                            {% csrf_token %}
+                            <div class="form-error">{{ form.non_field_errors }}</div>
+                            {% for f in form %}
+                                <div class="form-row-block">
+                                    <label class="form-label" for="{{ f.id_for_label }}">{{ f.label }}</label>
+                                    {{ f }}
+                                    {% if f.help_text %}<div class="form-help">{{ f.help_text }}</div>{% endif %}
+                                    <div class="form-error">{{ f.errors }}</div>
+                                </div>
+                            {% endfor %}
+                            <button type="submit" class="btn btn-primary btn-lg px-4">Добавить предложение</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+{% endblock %}

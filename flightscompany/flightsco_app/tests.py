@@ -1,11 +1,26 @@
+import shutil
+import tempfile
+from io import BytesIO
+
 from django.contrib import admin
 from django.contrib.auth import get_user_model
 from django.db.models.deletion import ProtectedError
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.templatetags.static import static
 from django.test import TestCase
 from django.urls import reverse
+from django.test.utils import override_settings
+from PIL import Image
 
-from .models import FlightArticle, FlightCategory, FlightTag
+from .models import FlightArticle, FlightCategory, FlightTag, UploadedFile
+
+
+def create_test_image(name="test.jpg", color=(0, 102, 204)):
+    buffer = BytesIO()
+    image = Image.new("RGB", (40, 40), color)
+    image.save(buffer, format="JPEG")
+    buffer.seek(0)
+    return SimpleUploadedFile(name, buffer.getvalue(), content_type="image/jpeg")
 
 
 class FlightRelationsTests(TestCase):
@@ -112,6 +127,123 @@ class FlightRelationsTests(TestCase):
         self.assertContains(response, self.weekend_tag.name)
 
 
+class FlightFormTests(TestCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.temp_media = tempfile.mkdtemp()
+        cls.override = override_settings(MEDIA_ROOT=cls.temp_media)
+        cls.override.enable()
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.override.disable()
+        shutil.rmtree(cls.temp_media, ignore_errors=True)
+        super().tearDownClass()
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.category = FlightCategory.objects.create(
+            name="Форма: внутренние рейсы",
+            slug="forms-domestic-category",
+        )
+        cls.tag = FlightTag.objects.create(
+            name="Форма: семейный отдых",
+            slug="forms-family-tag",
+        )
+
+    def test_search_page_uses_django_form_and_shows_valid_result(self):
+        response = self.client.get(
+            reverse("search"),
+            {
+                "origin": "Москва",
+                "destination": "Сочи",
+                "departure": "2026-05-01",
+                "return_date": "2026-05-09",
+                "passengers": "2",
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Москва → Сочи")
+        self.assertContains(response, "2")
+
+    def test_add_offer_page_creates_article_with_uploaded_photo(self):
+        response = self.client.post(
+            reverse("add_offer"),
+            {
+                "title": "Тестовый рейс в сочи",
+                "slug": "testovyy-reys-v-sochi",
+                "content": "Описание нового предложения для проверки формы.",
+                "route": "Казань — Сочи",
+                "price": "15990.00",
+                "status": FlightArticle.Status.PUBLISHED,
+                "category": self.category.pk,
+                "tags": [self.tag.pk],
+                "photo": create_test_image(),
+            },
+            follow=True,
+        )
+
+        self.assertEqual(response.status_code, 200)
+        article = FlightArticle.objects.get(slug="testovyy-reys-v-sochi")
+        self.assertEqual(article.category, self.category)
+        self.assertTrue(article.photo.name.startswith("photos/"))
+        self.assertEqual(article.tags.count(), 1)
+
+    def test_add_offer_form_shows_custom_validation_error(self):
+        response = self.client.post(
+            reverse("add_offer"),
+            {
+                "title": "Test flight title",
+                "slug": "test-flight-title",
+                "content": "Попытка отправить форму с неверным заголовком.",
+                "route": "Казань — Сочи",
+                "price": "15990.00",
+                "status": FlightArticle.Status.PUBLISHED,
+                "category": self.category.pk,
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(
+            response,
+            "Должны быть только русские символы, цифры, дефис и пробел.",
+        )
+        self.assertFalse(FlightArticle.objects.filter(slug="test-flight-title").exists())
+
+    def test_about_upload_page_saves_file_via_model(self):
+        upload = SimpleUploadedFile(
+            "ticket.txt",
+            b"flight ticket payload",
+            content_type="text/plain",
+        )
+
+        response = self.client.post(reverse("about"), {"file": upload}, follow=True)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(UploadedFile.objects.count(), 1)
+        self.assertContains(response, "uploads_model/")
+
+    def test_index_and_detail_render_uploaded_offer_image(self):
+        article = FlightArticle.objects.create(
+            title="Тестовое предложение с фото",
+            slug="test-offer-with-photo",
+            content="Описание предложения с фотографией для шаблонов.",
+            route="Казань — Минеральные Воды",
+            price="18390.00",
+            category=self.category,
+            status=FlightArticle.Status.PUBLISHED,
+            photo=create_test_image("offer-photo.jpg"),
+        )
+
+        index_response = self.client.get(reverse("index"))
+        detail_response = self.client.get(article.get_absolute_url())
+
+        self.assertContains(index_response, article.photo.url)
+        self.assertContains(detail_response, article.photo.url)
+
+
 class FlightAdminTests(TestCase):
     @classmethod
     def setUpTestData(cls):
@@ -181,11 +313,13 @@ class FlightAdminTests(TestCase):
         article_admin = admin.site._registry[FlightArticle]
         category_admin = admin.site._registry[FlightCategory]
         tag_admin = admin.site._registry[FlightTag]
+        upload_admin = admin.site._registry[UploadedFile]
 
         self.assertEqual(
             article_admin.list_display,
             (
                 "title",
+                "post_photo",
                 "route",
                 "price",
                 "time_create",
@@ -197,8 +331,10 @@ class FlightAdminTests(TestCase):
         self.assertEqual(article_admin.list_editable, ("status", "category"))
         self.assertEqual(article_admin.prepopulated_fields, {"slug": ("title",)})
         self.assertEqual(article_admin.filter_horizontal, ("tags",))
+        self.assertEqual(article_admin.readonly_fields, ("post_photo", "time_create", "time_update"))
         self.assertEqual(category_admin.prepopulated_fields, {"slug": ("name",)})
         self.assertEqual(tag_admin.prepopulated_fields, {"slug": ("name",)})
+        self.assertEqual(upload_admin.list_display, ("id", "file", "time_create"))
 
     def test_admin_search_finds_articles_by_related_category_name(self):
         response = self.client.get(

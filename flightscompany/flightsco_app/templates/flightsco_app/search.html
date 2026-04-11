@@ -10,55 +10,42 @@
       <div class="col-12 col-md-10 col-lg-8">
         <div class="card feature-card p-4">
           <h1 class="mb-4 text-center">Поиск авиабилетов</h1>
-          
+
           <form method="get" action="{% url 'search' %}">
             <div class="row g-3">
-              <div class="col-12 col-md-6">
-                <label for="origin" class="form-label">Откуда</label>
-                <input type="text" class="form-control p-3" id="origin" name="origin" placeholder="Город вылета" required>
+              {% for field in form %}
+              <div class="col-12 {% if field.name == 'origin' or field.name == 'destination' or field.name == 'departure' or field.name == 'return_date' %}col-md-6{% endif %}">
+                <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                {{ field }}
+                <div class="form-error">{{ field.errors }}</div>
               </div>
-              
-              <div class="col-12 col-md-6">
-                <label for="destination" class="form-label">Куда</label>
-                <input type="text" class="form-control p-3" id="destination" name="destination" placeholder="Город прилета" required>
-              </div>
-              
-              <div class="col-12 col-md-6">
-                <label for="departure" class="form-label">Дата вылета</label>
-                <input type="date" class="form-control p-3" id="departure" name="departure">
-              </div>
-              
-              <div class="col-12 col-md-6">
-                <label for="return" class="form-label">Дата возвращения</label>
-                <input type="date" class="form-control p-3" id="return" name="return">
-              </div>
-              
-              <div class="col-12">
-                <label for="passengers" class="form-label">Пассажиры</label>
-                <select class="form-select p-3" id="passengers" name="passengers">
-                  <option value="1">1 пассажир</option>
-                  <option value="2">2 пассажира</option>
-                  <option value="3">3 пассажира</option>
-                  <option value="4">4 пассажира</option>
-                  <option value="5+">5+ пассажиров</option>
-                </select>
-              </div>
-              
+              {% endfor %}
+
               <div class="col-12">
                 <button type="submit" class="btn btn-primary w-100 p-3">Найти рейсы</button>
               </div>
             </div>
           </form>
+
+          {% if search_result %}
+          <div class="search-result-card mt-4">
+            <h3 class="mb-3">Результаты запроса</h3>
+            <p class="mb-2">Маршрут: {{ search_result.origin }} → {{ search_result.destination }}</p>
+            <p class="mb-2">Дата вылета: {{ search_result.departure|default:"Не указана" }}</p>
+            <p class="mb-2">Дата возвращения: {{ search_result.return_date|default:"Не указана" }}</p>
+            <p class="mb-0">Пассажиры: {{ search_result.passengers }}</p>
+          </div>
+          {% endif %}
           
           <hr class="my-4">
           
           <div class="popular-routes">
             <h3 class="mb-3">Популярные направления</h3>
             <div class="d-flex flex-wrap gap-2">
-              <a href="{% url 'search' %}?origin=Moscow&destination=Saint+Petersburg" class="btn btn-outline-primary">Москва → Санкт-Петербург</a>
-              <a href="{% url 'search' %}?origin=Moscow&destination=Sochi" class="btn btn-outline-primary">Москва → Сочи</a>
-              <a href="{% url 'search' %}?origin=Moscow&destination=Kaliningrad" class="btn btn-outline-primary">Москва → Калининград</a>
-              <a href="{% url 'search' %}?origin=Saint+Petersburg&destination=Moscow" class="btn btn-outline-primary">Санкт-Петербург → Москва</a>
+              <a href="{% url 'search' %}?origin=Москва&destination=Санкт-Петербург" class="btn btn-outline-primary">Москва → Санкт-Петербург</a>
+              <a href="{% url 'search' %}?origin=Москва&destination=Сочи" class="btn btn-outline-primary">Москва → Сочи</a>
+              <a href="{% url 'search' %}?origin=Москва&destination=Калининград" class="btn btn-outline-primary">Москва → Калининград</a>
+              <a href="{% url 'search' %}?origin=Санкт-Петербург&destination=Москва" class="btn btn-outline-primary">Санкт-Петербург → Москва</a>
             </div>
           </div>
         </div>

@@ -5,6 +5,8 @@ from . import views
 urlpatterns = [
     # главная страница
     path("", views.index, name="index"),
+    path("about/", views.about, name="about"),
+    path("offers/add/", views.add_offer, name="add_offer"),
     # детальная страница предложения по слагу
     path("offers/<slug:article_slug>/", views.article_detail, name="article_detail"),
     # авторизация и профиль

@@ -2,7 +2,8 @@ from django.http import Http404, HttpResponse, HttpResponsePermanentRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 
-from .models import FlightArticle, FlightCategory, FlightTag
+from .forms import AddFlightArticleForm, FlightSearchForm, UploadFileForm
+from .models import FlightArticle, FlightCategory, FlightTag, UploadedFile
 
 
 def _get_offer_queryset():
@@ -106,22 +107,55 @@ def route_info(request, route_slug):
 
 
 def search(request):
-    if request.method == "GET" and request.GET:
-        origin = request.GET.get("origin", "")
-        destination = request.GET.get("destination", "")
-        departure_date = request.GET.get("departure", "")
+    search_result = None
 
-        print(f"Поиск рейсов: {origin} -> {destination}, дата: {departure_date}")
+    if request.GET:
+        form = FlightSearchForm(request.GET)
+        if form.is_valid():
+            search_result = form.cleaned_data
+    else:
+        form = FlightSearchForm()
 
-        if origin and destination:
-            return HttpResponse(
-                f"<h1>Результаты поиска</h1>"
-                f"<p>Откуда: {origin}</p>"
-                f"<p>Куда: {destination}</p>"
-                f"<p>Дата: {departure_date or 'Не указана'}</p>"
-            )
+    context = {
+        "form": form,
+        "search_result": search_result,
+    }
+    return render(request, "flightsco_app/search.html", context)
 
-    return render(request, "flightsco_app/search.html")
+
+def add_offer(request):
+    if request.method == "POST":
+        form = AddFlightArticleForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect("index")
+    else:
+        form = AddFlightArticleForm(
+            initial={"status": FlightArticle.Status.PUBLISHED}
+        )
+
+    context = {
+        "title": "Добавление предложения",
+        "form": form,
+    }
+    return render(request, "flightsco_app/add_offer.html", context)
+
+
+def about(request):
+    if request.method == "POST":
+        form = UploadFileForm(request.POST, request.FILES)
+        if form.is_valid():
+            UploadedFile.objects.create(file=form.cleaned_data["file"])
+            return redirect("about")
+    else:
+        form = UploadFileForm()
+
+    context = {
+        "title": "О сервисе",
+        "form": form,
+        "uploads": UploadedFile.objects.all()[:5],
+    }
+    return render(request, "flightsco_app/about.html", context)
 
 
 def tag_detail(request, tag_slug):
