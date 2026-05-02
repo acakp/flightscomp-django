@@ -3,5 +3,5 @@
   "reportIncompatibleMethodOverride": "none",
   "reportAssignmentType": "none",
   "reportMissingTypeStubs": "none",
-  "reportArgumentType": "none",
+  "reportArgumentType": "none"
 }

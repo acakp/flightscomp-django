@@ -345,7 +345,7 @@ body {
     align-items: center;
     justify-content: center;
     color: white;
-    font-weight: bold;
+    font-weight: 500;
 }
 
 .review-avatar img {
@@ -360,7 +360,7 @@ body {
 }
 
 .review-name {
-    font-weight: bold;
+    font-weight: 500;
     margin-bottom: 2px;
 }
 
@@ -395,8 +395,8 @@ body {
     background: #fff;
     padding: 30px 20px;
     border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    border: 2px solid #e9ecef;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
+    border: 1px solid #f1f3f5;
     text-align: left;
 }
 
@@ -404,6 +404,7 @@ body {
     font-size: 22px;
     color: #0071e3;
     margin-bottom: 10px;
+    font-weight: 500;
 }
 
 /* SUBSCRIBE */
@@ -415,7 +416,7 @@ body {
 .telegram-card {
     background: linear-gradient(135deg, #0071e3, #0056d6);
     border-radius: 28px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
     padding: 3rem 2rem;
 }
 
@@ -430,10 +431,11 @@ body {
 .faq details {
     background: #ffffff;
     padding: 18px 20px;
-    border-radius: 10px;
+    border-radius: 12px;
     margin-bottom: 12px;
     cursor: pointer;
-    border: 1px solid #e9ecef;
+    border: 1px solid #f1f3f5;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.02);
 }
 
 .faq summary {
@@ -463,6 +465,7 @@ body {
 .footer-col h4 {
     margin-bottom: 15px;
     font-size: 18px;
+    font-weight: 500;
 }
 
 .footer-col p {
@@ -490,6 +493,7 @@ body {
 
     .stat strong {
         font-size: 28px;
+        font-weight: 500;
     }
 
     .footer-cols {
@@ -529,6 +533,7 @@ body {
     background: #0071e3 !important;
     border-radius: 12px;
     border: none;
+    font-weight: 500;
 }
 
 .btn-primary a {
@@ -542,16 +547,16 @@ input.form-control {
 }
 
 .form-page {
-  background: #f8f8f8;
+  background: #fbfbfd;
   min-height: 100vh;
   padding: 100px 0 40px;
 }
 
 .form-card {
   background: #ffffff;
-  border: 1px solid #e8edf3;
+  border: 1px solid #f1f3f5;
   border-radius: 24px;
-  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04);
   padding: 32px;
 }
 
@@ -567,7 +572,7 @@ input.form-control {
 .form-label {
   color: #233047;
   display: block;
-  font-weight: 600;
+  font-weight: 500;
   margin-bottom: 8px;
 }
 

@@ -3,54 +3,56 @@
 {% block content %}
     <main class="form-page">
         <div class="container py-5">
-            <h1 class="mb-4">Управление доступом пользователей</h1>
-            <div class="table-responsive">
-                <table class="table table-bordered table-striped">
-                    <thead class="table-dark">
-                        <tr>
-                            <th>Логин</th>
-                            <th>Имя Фамилия</th>
-                            <th>Email</th>
-                            <th>Роль</th>
-                            <th>Действие</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for user_item in users_list %}
-                        <tr>
-                            <td>{{ user_item.username }}</td>
-                            <td>{{ user_item.first_name }} {{ user_item.last_name }}</td>
-                            <td>{{ user_item.email }}</td>
-                            <td>
-                                {% if user_item.is_superuser %}
-                                    <span class="badge bg-danger">Администратор</span>
-                                {% elif user_item.is_staff %}
-                                    <span class="badge bg-success">Сотрудник</span>
-                                {% else %}
-                                    <span class="badge bg-secondary">Пользователь</span>
-                                {% endif %}
-                            </td>
-                            <td>
-                                {% if not user_item.is_superuser %}
-                                    <form method="post" class="d-inline">
-                                        {% csrf_token %}
-                                        <input type="hidden" name="user_id" value="{{ user_item.pk }}">
-                                        {% if user_item.is_staff %}
-                                            <input type="hidden" name="action" value="remove_staff">
-                                            <button type="submit" class="btn btn-warning btn-sm">Лишить прав сотрудника</button>
-                                        {% else %}
-                                            <input type="hidden" name="action" value="make_staff">
-                                            <button type="submit" class="btn btn-primary btn-sm">Назначить сотрудником</button>
-                                        {% endif %}
-                                    </form>
-                                {% else %}
-                                    <span class="text-muted">Неприменимо</span>
-                                {% endif %}
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+            <h1 class="mb-4" style="font-weight: 500;">Управление доступом</h1>
+            <div class="form-card p-0" style="overflow: hidden;">
+                <div class="table-responsive">
+                    <table class="table mb-0" style="vertical-align: middle;">
+                        <thead style="background: #fbfbfd; border-bottom: 1px solid #f1f3f5;">
+                            <tr>
+                                <th style="font-weight: 500; color: #86868b; padding: 16px 24px; border: none;">Логин</th>
+                                <th style="font-weight: 500; color: #86868b; padding: 16px 24px; border: none;">Имя Фамилия</th>
+                                <th style="font-weight: 500; color: #86868b; padding: 16px 24px; border: none;">Email</th>
+                                <th style="font-weight: 500; color: #86868b; padding: 16px 24px; border: none;">Роль</th>
+                                <th style="font-weight: 500; color: #86868b; padding: 16px 24px; border: none;">Действие</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for user_item in users_list %}
+                            <tr style="border-bottom: 1px solid #f1f3f5;">
+                                <td style="padding: 16px 24px; border: none;">{{ user_item.username }}</td>
+                                <td style="padding: 16px 24px; border: none;">{{ user_item.first_name }} {{ user_item.last_name }}</td>
+                                <td style="padding: 16px 24px; border: none; color: #86868b;">{{ user_item.email }}</td>
+                                <td style="padding: 16px 24px; border: none;">
+                                    {% if user_item.is_superuser %}
+                                        <span class="badge" style="background: #fcebeb; color: #d93025; font-weight: 500; border-radius: 8px; padding: 6px 12px;">Администратор</span>
+                                    {% elif user_item.is_staff %}
+                                        <span class="badge" style="background: #e6f4ea; color: #1e8e3e; font-weight: 500; border-radius: 8px; padding: 6px 12px;">Сотрудник</span>
+                                    {% else %}
+                                        <span class="badge" style="background: #f1f3f5; color: #5f6368; font-weight: 500; border-radius: 8px; padding: 6px 12px;">Пользователь</span>
+                                    {% endif %}
+                                </td>
+                                <td style="padding: 16px 24px; border: none;">
+                                    {% if not user_item.is_superuser %}
+                                        <form method="post" class="d-inline">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="user_id" value="{{ user_item.pk }}">
+                                            {% if user_item.is_staff %}
+                                                <input type="hidden" name="action" value="remove_staff">
+                                                <button type="submit" class="btn btn-sm" style="background: #fff0f0; color: #d93025; border-radius: 8px; font-weight: 500; border: none; padding: 6px 12px;">Лишить прав</button>
+                                            {% else %}
+                                                <input type="hidden" name="action" value="make_staff">
+                                                <button type="submit" class="btn btn-sm" style="background: #eef3ff; color: #1f4ea8; border-radius: 8px; font-weight: 500; border: none; padding: 6px 12px;">Назначить</button>
+                                            {% endif %}
+                                        </form>
+                                    {% else %}
+                                        <span style="color: #86868b; font-size: 0.9em;">Неприменимо</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </main>

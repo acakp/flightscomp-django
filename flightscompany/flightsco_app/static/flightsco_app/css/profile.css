@@ -1,6 +1,6 @@
 .profile-section {
   padding: 120px 20px 80px;
-  background: #f8f8f8;
+  background: #fbfbfd;
   min-height: 100vh;
 }
 
@@ -14,7 +14,7 @@
   justify-content: center;
   color: white;
   font-size: 24px;
-  font-weight: bold;
+  font-weight: 500;
 }
 
 .profile-nav {
@@ -26,14 +26,14 @@
 .profile-nav-item {
   padding: 12px 16px;
   text-decoration: none;
-  color: #222;
-  border-radius: 8px;
+  color: #1d1d1f;
+  border-radius: 12px;
   transition: all 0.2s;
+  font-weight: 500;
 }
 
 .profile-nav-item:hover {
-  background: #e7f1ff;
-  color: #0071e3;
+  background: #f1f3f5;
 }
 
 .profile-nav-item.active {
@@ -42,24 +42,28 @@
 }
 
 .profile-nav-item.text-danger:hover {
-  background: #ffe7e7;
+  background: #fff0f0;
   color: #dc3545;
 }
 
 .stat-card {
-  background: #e7f1ff;
-  border-radius: 12px;
+  background: #ffffff;
+  border: 1px solid #f1f3f5;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.02);
 }
 
 .booking-card {
-  border: 1px solid #e1e8ed;
-  border-radius: 12px;
+  background: #ffffff;
+  border: 1px solid #f1f3f5;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.02);
   transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .booking-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
 }
 
 .booking-card.completed {
@@ -70,7 +74,7 @@
   width: 40px;
   height: 40px;
   background: #0071e3;
-  border-radius: 8px;
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -79,7 +83,13 @@
 }
 
 .flight-icon.completed {
-  background: #6c757d;
+  background: #86868b;
+}
+
+.feature-card {
+  border: none;
+  border-radius: 20px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04);
 }
 
 /* адаптивность */
