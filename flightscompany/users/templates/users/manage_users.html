@@ -1,0 +1,57 @@
+{% extends "flightsco_app/base.html" %}
+{% block title %}Управление доступом пользователей - Флайтс Компани{% endblock %}
+{% block content %}
+    <main class="form-page">
+        <div class="container py-5">
+            <h1 class="mb-4">Управление доступом пользователей</h1>
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Логин</th>
+                            <th>Имя Фамилия</th>
+                            <th>Email</th>
+                            <th>Роль</th>
+                            <th>Действие</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user_item in users_list %}
+                        <tr>
+                            <td>{{ user_item.username }}</td>
+                            <td>{{ user_item.first_name }} {{ user_item.last_name }}</td>
+                            <td>{{ user_item.email }}</td>
+                            <td>
+                                {% if user_item.is_superuser %}
+                                    <span class="badge bg-danger">Администратор</span>
+                                {% elif user_item.is_staff %}
+                                    <span class="badge bg-success">Сотрудник</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">Пользователь</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if not user_item.is_superuser %}
+                                    <form method="post" class="d-inline">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="user_id" value="{{ user_item.pk }}">
+                                        {% if user_item.is_staff %}
+                                            <input type="hidden" name="action" value="remove_staff">
+                                            <button type="submit" class="btn btn-warning btn-sm">Лишить прав сотрудника</button>
+                                        {% else %}
+                                            <input type="hidden" name="action" value="make_staff">
+                                            <button type="submit" class="btn btn-primary btn-sm">Назначить сотрудником</button>
+                                        {% endif %}
+                                    </form>
+                                {% else %}
+                                    <span class="text-muted">Неприменимо</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+{% endblock %}

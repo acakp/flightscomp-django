@@ -106,6 +106,7 @@
                                                 {{ article.category.name }}
                                             </a>
                                         {% endif %}
+                                        <span class="offer-meta-item">Автор: {{ article.author.username|default:"администратор" }}</span>
                                         <span class="offer-meta-item">Обновлено {{ article.time_update|date:"d.m.Y H:i" }}</span>
                                     </div>
                                     {% if article.photo %}

@@ -9,8 +9,7 @@ urlpatterns = [
     path("offers/add/", views.add_offer, name="add_offer"),
     # детальная страница предложения по слагу
     path("offers/<slug:article_slug>/", views.article_detail, name="article_detail"),
-    # авторизация и профиль
-    path("auth/", views.auth, name="auth"),
+    # профиль
     path("profile/", views.profile, name="profile"),
     # информация о самолетах (int конвертер)
     path("planes/<int:plane_id>/", views.planes, name="planes"),

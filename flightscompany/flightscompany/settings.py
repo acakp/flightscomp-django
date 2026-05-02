@@ -44,7 +44,12 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django_extensions",
     "flightsco_app.apps.FlightscoAppConfig",
+    "users.apps.UsersConfig",
 ]
+
+LOGIN_REDIRECT_URL = "index"
+LOGOUT_REDIRECT_URL = "index"
+LOGIN_URL = "users:login"
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -65,9 +70,11 @@ TEMPLATES = [
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
+                "django.template.context_processors.debug",
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "users.context_processors.get_flights_context",
             ],
         },
     },

@@ -31,6 +31,7 @@ handler500 = "flightsco_app.views.server_error"
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("users/", include("users.urls", namespace="users")),
     path("", include("flightsco_app.urls")),
 ]
 

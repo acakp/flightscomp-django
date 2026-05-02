@@ -19,11 +19,23 @@
     <div class="container">
       <div class="navbar-logo"><a href="{% url 'index' %}">флайтс компани</a></div>
       <div class="navbar-links">
-        <a href="{% url 'search' %}" class="navbar-item">Рейсы</a>
-        <a href="{% url 'add_offer' %}" class="navbar-item">Добавить</a>
-        <a href="{% url 'about' %}" class="navbar-item">Загрузка</a>
+        {% for m in mainmenu %}
+          <a href="{% url m.url_name %}" class="navbar-item">{{ m.title }}</a>
+        {% endfor %}
       </div>
-      <a href="{% url 'profile' %}" class="navbar-item profile-button">Профиль</a>
+      <div class="navbar-auth">
+        {% if user.is_authenticated %}
+          <span class="navbar-item text-white opacity-75 d-none d-md-inline">{{ user.username }}</span>
+          <a href="{% url 'profile' %}" class="navbar-item profile-button">Профиль</a>
+          <form action="{% url 'users:logout' %}" method="post" style="display: inline;">
+            {% csrf_token %}
+            <button type="submit" class="navbar-item text-white" style="background:none; border:none; color:inherit; cursor:pointer;">Выйти</button>
+          </form>
+        {% else %}
+          <a href="{% url 'users:login' %}" class="navbar-item">Войти</a>
+          <a href="{% url 'users:register' %}" class="navbar-item">Регистрация</a>
+        {% endif %}
+      </div>
       <button class="navbar-hamburger" id="hamburger-btn">&#9776;</button>
     </div>
   </header>

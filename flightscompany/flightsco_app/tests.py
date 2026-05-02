@@ -143,6 +143,13 @@ class FlightFormTests(TestCase):
 
     @classmethod
     def setUpTestData(cls):
+        user_model = get_user_model()
+        cls.user = user_model.objects.create_user(
+            username="testuser",
+            email="testuser@example.com",
+            password="TestPassword123!",
+            is_staff=True,
+        )
         cls.category = FlightCategory.objects.create(
             name="Форма: внутренние рейсы",
             slug="forms-domestic-category",
@@ -151,6 +158,9 @@ class FlightFormTests(TestCase):
             name="Форма: семейный отдых",
             slug="forms-family-tag",
         )
+
+    def setUp(self):
+        self.client.force_login(self.user)
 
     def test_search_page_uses_django_form_and_shows_valid_result(self):
         response = self.client.get(

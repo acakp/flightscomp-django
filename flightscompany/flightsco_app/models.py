@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from django.db import models
 from django.urls import reverse
 
@@ -71,6 +72,14 @@ class FlightArticle(models.Model):
         on_delete=models.PROTECT,
         related_name="articles",
         verbose_name="Категория",
+    )
+    author = models.ForeignKey(
+        get_user_model(),
+        on_delete=models.SET_NULL,
+        related_name="articles",
+        null=True,
+        default=None,
+        verbose_name="Автор",
     )
     tags = models.ManyToManyField(
         FlightTag,

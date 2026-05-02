@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import Http404, HttpResponse, HttpResponsePermanentRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
@@ -54,18 +55,7 @@ def article_detail(request, article_slug):
     return render(request, "flightsco_app/article_detail.html", context)
 
 
-def auth(request):
-    if request.method == "POST":
-        email = request.POST.get("email")
-        password = request.POST.get("password")
-        remember = request.POST.get("remember")
-
-        # в реальной здесь была бы проверка учетных данных
-        # пока просто перенаправляем на профиль
-        return redirect("profile")
-    return render(request, "flightsco_app/auth.html")
-
-
+@login_required
 def profile(request):
     return render(request, "flightsco_app/profile.html")
 
@@ -123,11 +113,18 @@ def search(request):
     return render(request, "flightsco_app/search.html", context)
 
 
+def is_staff_user(user):
+    return user.is_authenticated and (user.is_staff or user.is_superuser)
+
+@user_passes_test(is_staff_user)
 def add_offer(request):
     if request.method == "POST":
         form = AddFlightArticleForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
+            offer = form.save(commit=False)
+            offer.author = request.user
+            offer.save()
+            form.save_m2m()
             return redirect("index")
     else:
         form = AddFlightArticleForm(
