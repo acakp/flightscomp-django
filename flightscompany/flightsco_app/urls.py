@@ -34,6 +34,7 @@ urlpatterns = [
     # примеры перенаправлений
     path("old-booking/", views.old_booking_page, name="old_booking"),
     path("temp-redirect/", views.temp_redirect, name="temp_redirect"),
+    path("office-map/", views.office_map, name="office_map"),
     path(
         "redirect-with-reverse/",
         views.redirect_with_reverse,

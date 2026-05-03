@@ -1,0 +1,40 @@
+{% extends "flightsco_app/base.html" %}
+
+{% block title %}{{ title }} - Флайтс Компани{% endblock %}
+
+{% block content %}
+<main class="form-page">
+    <div class="container py-5">
+        <div class="form-card">
+            <h1 class="mb-4" style="font-weight: 500;">{{ title }}</h1>
+            <p style="color: #86868b; margin-bottom: 24px;">Россия, г. Казань, ул. Аделя Кутуя д. 110А</p>
+            <div id="map" style="width: 100%; height: 500px; border-radius: 16px; overflow: hidden; border: 1px solid #f1f3f5; box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);"></div>
+        </div>
+    </div>
+</main>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://api-maps.yandex.ru/2.1/?apikey={{ YANDEX_MAPS_API_KEY }}&lang=ru_RU" type="text/javascript"></script>
+<script type="text/javascript">
+    ymaps.ready(init);
+    function init() {
+        // Координаты: Казань, ул. Аделя Кутуя 110А
+        var officeCoords = [55.781219, 49.192331];
+        var myMap = new ymaps.Map("map", {
+            center: officeCoords,
+            zoom: 16,
+            controls: ['zoomControl', 'fullscreenControl']
+        });
+
+        var myPlacemark = new ymaps.Placemark(officeCoords, {
+            hintContent: 'Офис Флайтс Компани',
+            balloonContent: '<strong>Офис Флайтс Компани</strong><br>Россия, г. Казань, ул. Аделя Кутуя д. 110А'
+        }, {
+            preset: 'islands#blueDotIcon'
+        });
+
+        myMap.geoObjects.add(myPlacemark);
+    }
+</script>
+{% endblock %}

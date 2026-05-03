@@ -1,3 +1,5 @@
+from django.conf import settings
+
 def get_flights_context(request):
     menu = [
         {"title": "Рейсы", "url_name": "search"},
@@ -10,4 +12,7 @@ def get_flights_context(request):
             
     menu.append({"title": "Загрузка", "url_name": "about"})
     
-    return {"mainmenu": menu}
+    return {
+        "mainmenu": menu,
+        "YANDEX_MAPS_API_KEY": getattr(settings, 'YANDEX_MAPS_API_KEY', ''),
+    }

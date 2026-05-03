@@ -198,6 +198,10 @@ def temp_redirect(request):
     return redirect("categories")
 
 
+def office_map(request):
+    return render(request, "flightsco_app/map_office.html", {"title": "Офис на карте"})
+
+
 def redirect_with_reverse(request):
     # Вычисление URL с помощью reverse()
     url = reverse("flight_detail", args=[123])
