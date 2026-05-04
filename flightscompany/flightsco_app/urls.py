@@ -27,6 +27,8 @@ urlpatterns = [
     # поиск рейсов
     path("search/", views.search, name="search"),
     path("tags/<slug:tag_slug>/", views.tag_detail, name="tag_detail"),
+    # chatbot API
+    path("chatbot/api/", views.chatbot_api, name="chatbot_api"),
     # бронирование
     path("booking/", views.booking, name="booking"),
     # архив по годам (int конвертер с проверкой)

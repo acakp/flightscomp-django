@@ -1,7 +1,11 @@
+import json
+import requests
+from django.conf import settings
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.http import Http404, HttpResponse, HttpResponsePermanentRedirect
+from django.http import Http404, HttpResponse, HttpResponsePermanentRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
+from django.views.decorators.csrf import csrf_exempt
 
 from .forms import AddFlightArticleForm, FlightSearchForm, UploadFileForm
 from .models import FlightArticle, FlightCategory, FlightTag, UploadedFile
@@ -9,6 +13,59 @@ from .models import FlightArticle, FlightCategory, FlightTag, UploadedFile
 
 def _get_offer_queryset():
     return FlightArticle.published.select_related("category").prefetch_related("tags")
+
+
+@csrf_exempt
+def chatbot_api(request):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+            user_message = data.get("message", "")
+
+            api_key = settings.YANDEX_GPT_API_KEY
+            folder_id = settings.YANDEX_FOLDER_ID
+
+            if not api_key or not folder_id:
+                return JsonResponse({"reply": "Пожалуйста, настройте YANDEX_GPT_API_KEY и YANDEX_FOLDER_ID в .env файле."})
+
+            url = "https://llm.api.cloud.yandex.net/foundationModels/v1/completion"
+            headers = {
+                "Authorization": f"Api-Key {api_key}",
+                "x-folder-id": folder_id,
+                "Content-Type": "application/json"
+            }
+
+            payload = {
+                "modelUri": f"gpt://{folder_id}/yandexgpt/latest",
+                "completionOptions": {
+                    "stream": False,
+                    "temperature": 0.6,
+                    "maxTokens": "1000"
+                },
+                "messages": [
+                    {
+                        "role": "system",
+                        "text": "Ты - полезный и вежливый чат-бот для сайта бронирования авиабилетов 'Флайтс Компани'. Отвечай на вопросы о рейсах, бронировании и путешествиях кратко и по делу."
+                    },
+                    {
+                        "role": "user",
+                        "text": user_message
+                    }
+                ]
+            }
+
+            response = requests.post(url, headers=headers, json=payload)
+            response.raise_for_status()
+
+            result_data = response.json()
+            reply_text = result_data["result"]["alternatives"][0]["message"]["text"]
+
+            return JsonResponse({"reply": reply_text})
+
+        except Exception as e:
+            return JsonResponse({"reply": f"Произошла ошибка при обращении к API: {str(e)}"}, status=500)
+
+    return JsonResponse({"error": "Method not allowed"}, status=405)
 
 
 def _build_catalog_context(
